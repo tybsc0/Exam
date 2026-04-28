@@ -175,6 +175,521 @@ print("Original array:")
 print(arr)
 # Get indices of sorted elements
 indices = np.argsort(arr)
-
 print("Indices of the sorted elements of a given array:")
 print(indices)
+
+Q11. Write a NumPy program to partition a given array in a specified position and move all the smaller elements values to the left of the partition, and the remaining values to the right, in arbitrary order (based on random choice).
+Code:
+import numpy as np
+# Given array
+arr = np.array([70, 50, 20, 30, -11, 60, 50, 40])
+print("Original array:")
+print(arr)
+# Partition at index 4
+partitioned = np.partition(arr, 4)
+print("\nAfter partitioning on 4 the position:")
+print(partitioned)
+
+12. Load a CSV file containing sales data into a Pandas Data Frame. Display the first 10 rows and summarize the dataset using appropriate functions.
+Code:
+from google.colab import files
+uploaded = files.upload()
+import pandas as pd
+# Load CSV file
+df = pd.read_csv('/content/sales (2).csv')
+# Display the first 10 rows
+print("First 10 rows of the DataFrame:")
+print(df.head(10))
+# Summarize the dataset
+print("\nDataset Information:")
+df.info()
+print("\nDescriptive Statistics:")
+print(df.describe())
+
+13. Clean the dataset by handling missing values using at least two different techniques (e.g., fillna, dropna). Explain your approach.
+Code:
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv("sales (2).csv")
+
+print("Missing values before cleaning:")
+print(df.isnull().sum())
+
+# 🔹 Method 1: Fill missing values
+# Fill numeric columns with mean
+df_filled = df.fillna(df.mean(numeric_only=True))
+
+# 🔹 Method 2: Drop missing values
+df_dropped = df.dropna()
+
+print("\nAfter filling missing values:")
+print(df_filled.isnull().sum())
+
+print("\nAfter dropping missing values:")
+print(df_dropped.isnull().sum())
+
+## Explanation of Approach
+
+To clean the dataset, I handled missing values using two methods: fillna() and dropna().
+
+ 1. Using fillna()
+
+In this method, missing values were replaced with the mean of the respective column (for numeric data).
+This approach helps in preserving the dataset size and avoids losing important information.
+
+ Example:
+If a sales value is missing, it is replaced with the average sales value of that column.
+
+ Advantage:
+
+No data loss
+
+Maintains dataset completeness
+
+ 2. Using dropna()
+
+In this method, rows containing missing values were removed completely.
+This ensures that the dataset becomes clean and free from missing data.
+
+ Advantage:
+
+Improves data accuracy
+
+Easy to apply
+
+ Disadvantage:
+
+ Some data is lost
+
+
+14). Convert a date column into datetime format and extract year, month, and weekday from it.
+Code:
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv("sales (2).csv")
+
+# Convert column to datetime, specifying dayfirst=True to handle the date format
+df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+
+# Extract year, month, and weekday
+df['Year'] = df['Date'].dt.year
+df['Month'] = df['Date'].dt.month
+df['Weekday'] = df['Date'].dt.day_name()
+
+# Display result
+print(df[['Date', 'Year', 'Month', 'Weekday']].head())
+
+Q15.) Filter the dataset to show records where sales are greater than a specific threshold and region equals 'North'.
+Code:
+import pandas as pd
+# Load dataset
+df = pd.read_csv("sales (1).csv")
+# Set threshold value (example: 500)
+threshold = 500
+# Filter data
+filtered_df = df[(df['Sales'] > threshold) & (df['Region'] == 'North')]
+# Display result
+print(filtered_df)
+
+Q16). Group the data by product category and calculate total sales, average sales, and count of transactions.
+Code:
+# group by Product Category
+grouped = df.groupby('Category')['Sales'].agg(['sum', 'mean', 'count'])
+# show result
+print(grouped)
+
+Q17). Create a pivot table showing total sales by region and product category.
+Code:
+# create pivot table
+pivot_table = pd.pivot_table(
+    df,
+    values='Sales',
+    index='Region',
+    columns='Category',
+    aggfunc='sum'
+)
+# show result
+print(pivot_table)
+
+Q18).Merge two DataFrames (sales data and product details) using different types of joins (inner, left). Explain the difference in results.
+Code:
+# Create a sample product details DataFrame that has a 'Product' column,
+# matching the 'Product' column in the main df.
+product_details_df = pd.DataFrame({
+    'Product': ['Product_A', 'Product_B', 'Product_C', 'Product_D', 'Product_E'],
+    'Price_Per_Unit': [1500, 1200, 800, 2000, 500],
+    'Manufacturer': ['Manu_1', 'Manu_2', 'Manu_1', 'Manu_3', 'Manu_2']
+})
+print("Product Details DataFrame:")
+display(product_details_df)
+# Inner Join
+# Merge on the 'Product' column, which is common to both DataFrames
+inner_merge = pd.merge(df, product_details_df, on='Product', how='inner')
+# Left Join
+# Merge on the 'Product' column
+left_merge = pd.merge(df, product_details_df, on='Product', how='left')
+# show results
+print("\nInner Join:")
+print(inner_merge.head())
+print("\nLeft Join:")
+print(left_merge.head())
+
+## Difference in results Inner Join:
+Shows only records where both DataFrames have matching ProductID
+Unmatched rows are removed
+Left Join:
+Shows all records from sales data
+If no match in product details, values become NaN
+
+Q19).Identify duplicate rows in the dataset and remove them. Show the number of duplicates removed
+Code:
+# count duplicate rows
+duplicates = df.duplicated().sum()
+# remove duplicates
+df_clean = df.drop_duplicates()
+# show result
+print("Number of duplicates removed:", duplicates)
+print(df_clean.head())
+
+Q20.) Apply a custom function to create a new column called 'Sales_Status' that categorizes sales as 'High', 'Medium', or 'Low'.
+Code:
+#custom function
+def sales_status(x):
+    if x > 1000:
+        return 'High'
+    elif x > 500:
+        return 'Medium'
+    else:
+        return 'Low'
+
+# apply function
+df['Sales_Status'] = df['Sales'].apply(sales_status)
+
+# show result
+print(df[['Sales', 'Sales_Status']].head())
+
+Q21.) Sort the DataFrame based on multiple columns (e.g., region ascending and sales descending).
+Code:
+df_sorted = df.sort_values(by=['Region', 'Sales'], ascending=[True, False])
+# show result
+print(df_sorted.head())
+
+Q22.) Use rolling window functions to calculate a 7-day moving average of sales.
+Code:
+# convert Date column
+df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+# sort by Date (important)
+df = df.sort_values(by='Date')
+# calculate 7-day moving average
+df['7_day_avg'] = df['Sales'].rolling(window=7).mean()
+# show result
+print(df[['Date', 'Sales', '7_day_avg']].head(10))
+
+Q23.) Perform resampling on time-series data to calculate monthly sales totals.
+Code:
+# ensure Date column is datetime type (if not already) and set as index
+df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+df_resample = df.set_index('Date')
+
+# resample monthly and calculate total sales
+monthly_sales = df_resample['Sales'].resample('ME').sum()
+# show result
+print(monthly_sales)
+
+Q24.) Use apply(), map(), and lambda functions to transform column values.
+Code:
+# apply() with custom function
+df['Double_Sales'] = df['Sales'].apply(lambda x: x * 2)
+
+# map() for replacing values
+df['Region'] = df['Region'].map({
+    'North': 'N',
+    'South': 'S',
+    'East': 'E',
+    'West': 'W'
+})
+
+# lambda for new column
+df['High_Sales'] = df['Sales'].apply(lambda x: 'Yes' if x > 1000 else 'No')
+# show result
+print(df.head())
+
+Q25.) Create visualizations using Pandas (e.g., bar chart for sales by category and line chart for sales over time).
+Code:
+import pandas as pd
+import matplotlib.pyplot as plt
+# load dataset
+df = pd.read_csv("sales (1).csv")
+# convert Date column
+df['Date'] = pd.to_datetime(df['Date'], dayfirst=True)
+# Bar chart: Sales by Category
+category_sales = df.groupby('Category')['Sales'].sum()
+category_sales.plot(kind='bar')
+plt.title("Sales by Category")
+plt.xlabel("Category")
+plt.ylabel("Sales")
+plt.show()
+# Line chart: Sales over time
+df = df.sort_values(by='Date')
+df.set_index('Date', inplace=True)
+df['Sales'].plot()
+plt.title("Sales Over Time")
+plt.xlabel("Date")
+plt.ylabel("Sales")
+plt.show()
+
+
+Q26.)  Export the cleaned and processed DataFrame to a new Excel file.
+Code:
+import pandas as pd
+# load dataset
+df = pd.read_csv("sales (1).csv")
+# (assume cleaning/processing already done)
+# export to Excel
+df.to_excel("cleaned_sales.xlsx", index=False)
+print("File exported successfully!")
+
+
+
+## Question 
+
+Use these datasets for all questions. Students should create these DataFrames first.
+import pandas as pd
+import numpy as np
+
+# Employees table
+employees = pd.DataFrame({
+    'emp_id': [1, 2, 3, 4, 5, 6],
+    'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank'],
+    'dept_id': [10, 20, 10, 30, 20, 40],
+    'salary': [75000, 80000, 65000, 90000, 72000, 68000]
+})
+# Departments table
+departments = pd.DataFrame({
+    'dept_id': [10, 20, 30, 50],
+    'dept_name': ['HR', 'IT', 'Finance', 'Marketing'],
+    'location': ['Mumbai', 'Pune', 'Delhi', 'Bangalore']
+})
+# Projects table (for multi-table joins)
+projects = pd.DataFrame({
+    'proj_id': [101, 102, 103, 104],
+    'emp_id': [1, 2, 3, 5],
+    'project_name': ['Dashboard', 'ML Model', 'Report', 'ETL Pipeline']
+})
+
+
+
+Q1.) Perform an inner join between employees and departments on dept_id to show only employees with valid departments. 
+Code:
+import pandas as pd
+# Inner join
+result = pd.merge(employees, departments, on='dept_id', how='inner')
+print("Employees with valid departments:")
+print(result)
+
+Q2.) 	Use left join to list all employees with their department details (show NaN for missing departments).
+Code:
+left_join = pd.merge(employees, departments, on='dept_id', how='left')
+print(left_join)
+
+3.	Create a right join to show all departments with their employees (multiple employees per department possible).
+Code:
+right_join = pd.merge(employees, departments, on='dept_id', how='right')
+print(right_join)
+
+4. Perform a full outer join to see all employees AND all departments, regardless of matches.
+Code:
+outer_join = pd.merge(employees, departments, on='dept_id', how='outer')
+print(outer_join)
+
+5.	Multi-table join: Join employees with departments and projects to show employee name, project name, and department for employees working on projects.
+Code:
+# Step 1: employees + departments
+emp_dept = pd.merge(employees, departments, on='dept_id', how='inner')
+# Step 2: join with projects
+final = pd.merge(emp_dept, projects, on='emp_id', how='inner')
+# Select required columns
+result = final[['name', 'project_name', 'dept_name']]
+print(result)
+
+6.	Join employees and projects where employee IDs have different column names (emp_id vs employee_id).
+Code:
+# Rename column for demonstration
+projects_renamed = projects.rename(columns={'emp_id': 'employee_id'})
+
+# Merge using different column names
+result = pd.merge(employees, projects_renamed,
+                  left_on='emp_id', right_on='employee_id',
+                  how='inner')
+
+print(result)
+
+7.	Advanced: Set dept_id as index in both DataFrames and perform an index-based join.
+Code:
+# Set index
+emp_index = employees.set_index('dept_id')
+dept_index = departments.set_index('dept_id')
+# Join using index
+result = emp_index.join(dept_index, how='inner')
+print(result)
+
+
+
+#### DATA VISUALISATION:
+## Use this common sales dataset for all questions. Students should load it into a pandas DataFrame.
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+warnings.filterwarnings('ignore')
+
+# Sample sales data
+data = {
+    'Region': ['North', 'South', 'East', 'West', 'North', 'South', 'East', 'West'],
+    'Year': [2023, 2023, 2023, 2023, 2024, 2024, 2024, 2024],
+    'Product': ['A','A','A','A','A','A','A','A'],
+    'Sales': [100, 150, 120, 180, 110, 160, 130, 190],
+    'Profit': [20, 25, 22, 30, 21, 26, 23, 31]
+}
+df_single = pd.DataFrame(data)
+
+# Extended dataset
+data_ext = {
+    'Region': np.repeat(['North','South','East','West'], 10),
+    'Year': np.tile(np.repeat([2023, 2024], 5), 4),
+    'Product': np.tile(['A','B','C','D','E'], 8),
+    'Sales': np.random.randint(80, 200, 40),
+    'Profit': np.random.randint(15, 35, 40)
+}
+df_ext = pd.DataFrame(data_ext)
+
+# Correlation dataset
+np.random.seed(42)
+corr_data = pd.DataFrame({
+    'Sales': np.random.normal(150, 30, 100),
+    'Profit': np.random.normal(25, 5, 100),
+    'Marketing': np.random.normal(50, 10, 100),
+    'Region_Score': np.random.normal(7, 1.5, 100)
+})
+
+# Create correlation
+corr_data['Profit'] = corr_data['Sales'] * 0.15 + np.random.normal(0, 2, 100)
+
+
+Q1. Create a bar plot showing total sales by region for 2024 using df_single. Label axes and add value labels on bars.
+Code:
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Sample sales data (copied from setup cell vVM3mfrmafTs to make this cell runnable independently)
+data = {
+    'Region': ['North', 'South', 'East', 'West', 'North', 'South', 'East', 'West'],
+    'Year': [2023, 2023, 2023, 2023, 2024, 2024, 2024, 2024],
+    'Product': ['A','A','A','A','A','A','A','A'],
+    'Sales': [100, 150, 120, 180, 110, 160, 130, 190],
+    'Profit': [20, 25, 22, 30, 21, 26, 23, 31]
+}
+df_single = pd.DataFrame(data)
+
+df_2024 = df_single[df_single['Year'] == 2024]
+sales_region = df_2024.groupby('Region')['Sales'].sum()
+
+ax = sales_region.plot(kind='bar', color='green')
+plt.title("Total Sales by Region (2024)")
+plt.xlabel("Region")
+plt.ylabel("Sales")
+
+# Add value labels
+for i, v in enumerate(sales_region):
+    plt.text(i, v, str(v), ha='center')
+
+plt.show()
+
+Q2.) Generate a grouped bar plot comparing sales for Products A and B across regions in df_ext. Use different colors.
+Code:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Extended dataset (copied from setup cell vVM3mfrmafTs to make this cell runnable independently)
+data_ext = {
+    'Region': np.repeat(['North','South','East','West'], 10),
+    'Year': np.tile(np.repeat([2023, 2024], 5), 4),
+    'Product': np.tile(['A','B','C','D','E'], 8),
+    'Sales': np.random.randint(80, 200, 40),
+    'Profit': np.random.randint(15, 35, 40)
+}
+df_ext = pd.DataFrame(data_ext)
+
+df_ab = df_ext[df_ext['Product'].isin(['A', 'B'])]
+grouped = df_ab.groupby(['Region', 'Product'])['Sales'].sum().unstack()
+
+grouped.plot(kind='bar', color=['yellow', 'red'])
+plt.title("Sales Comparison (A vs B)")
+plt.ylabel("Sales")
+plt.show()
+
+Q3.) Create a heatmap of average sales by Region and Year from df_ext. Annotate values and use a coolwarm colormap.
+Code:
+pivot = df_ext.pivot_table(values='Sales', index='Region', columns='Year', aggfunc='mean')
+
+sns.heatmap(pivot, annot=True, cmap='coolwarm')
+plt.title("Average Sales Heatmap")
+plt.show()
+
+Q4.	Compute and visualize the correlation matrix of corr_data as a heatmap. Highlight strong correlations (>0.5)
+ode:
+corr = corr_data.corr()
+sns.heatmap(corr, annot=True, cmap='coolwarm')
+plt.title("Correlation Matrix")
+plt.show()
+
+Q5.Plot a pie chart of total sales distribution by region using df_single. Explode the largest slice and add percentages.
+Code:
+sales_region = df_single.groupby('Region')['Sales'].sum()
+
+explode = [0.1 if v == max(sales_region) else 0 for v in sales_region]
+
+# Define a list of colors for the pie chart slices
+colors = ['red', 'yellow', 'purple', 'green']
+
+plt.pie(sales_region, labels=sales_region.index,
+        autopct='%1.1f%%', explode=explode, colors=colors)
+
+plt.title("Sales Distribution by Region")
+plt.show()
+
+Q6).Create a stacked bar chart showing sales by Product within each Region for 2024 from df_ext. Use distinct colors.
+Code:
+df_2024 = df_ext[df_ext['Year'] == 2024]
+
+stacked = df_2024.groupby(['Region', 'Product'])['Sales'].sum().unstack()
+
+# Define a custom color palette
+custom_colors = ['#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845']
+
+stacked.plot(kind='bar', stacked=True, color=custom_colors)
+plt.title("Product-wise Sales (2024)")
+plt.ylabel("Sales")
+plt.show()
+
+Q7).	Draw a scatter plot of Sales vs Profit from corr_data with region score as size and color by a categorical variable (e.g., bin Profit). Add trend line.
+Code:
+import matplotlib.pyplot as plt
+# Create category based on Profit
+corr_data['Profit_cat'] = pd.cut(corr_data['Profit'], bins=3, labels=['Low','Medium','High'])
+
+sns.scatterplot(x='Sales', y='Profit',
+                size='Region_Score',
+                hue='Profit_cat',
+                data=corr_data)
+
+# Trend line
+sns.regplot(x='Sales', y='Profit', data=corr_data, scatter=False, color='red')
+
+plt.title("Sales vs Profit")
+plt.show()
