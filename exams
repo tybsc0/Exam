@@ -1,1345 +1,180 @@
-## Bootstrap sampling  
- Q.1) Consider following is prices( in million $) of houses in Bhopal 10, 15, 16, 18, 20, 25, 18, 15,16, 21 The average price for complete population 𝜇=17.4 and standard error=1.284 i) Generate 100 bootstrap samples with replacement and find mean and standard error for those samples. Draw histogram for means of drawn sample. ii) Now generate 10000 bootstrap samples with replacement and find mean and standard error for those samples. Draw histogram for drawn sample. Now compare histograms of (i) and (ii) and comment.
-INPUT:
-#(i)
-x=c(10, 15, 16, 18, 20, 25, 18, 15,16, 21 )
-mean=mean(x)
-sd= sd(x)
-set.seed(100)
-a=replicate(100,mean(sample(x,10,replace = T)))
-mean(a)
-sd(a)
-hist(a)
-#(ii)
-set.seed(100)
-b=replicate(10000,mean(sample(x,10,replace = T)))
-mean(b)
-sd(b)
-hist(b)
+Q1.)	Consider this dataset of car sales:
+Car	Category	Price	Units Sold
+Honda	Sedan	25000	120
+Honda	SUV	30000	100
+Toyota	Sedan	23000	150
+Toyota	SUV	28000	90
+Ford	Sedan	24000	110
+Ford	Pickup	35000	80
 
-Q.2> Consider the following 25 observations 8.26 6.33 10.4 5.27 5.35 5.61 6.12 6.19 5.2 7.01 8.74 7.78 7.02 6 6.5 5.8 5.12 7.41 6.52 6.21 12.28 5.6 5.38 6.6 8.74. Generate 1000 bootstrap samples from the above data and find the mean of each sample and find confidence interval for the mean.
-Input:
-y=c(8.26, 6.33, 10.4, 5.27, 5.35, 5.61,
-    6.12, 6.19, 5.2 ,7.01,8.74 ,7.78 
-    ,7.02, 6, 6.5, 5.8, 5.12 ,7.41 ,6.52
-    ,6.21 ,12.28 ,5.6 ,5.38 ,6.6 ,8.74)
-m=mean(y)
-s_d=sd(y)
-set.seed(100)
-c=replicate(1000,mean(sample(y,25,replace=T)));c
-m2=mean(c)
-sd2=sd(c)
-lcl2=m2-1.96*sd2
-ucl=m2+1.96*sd2
-lcl2
-ucl
+compute the following using Group By and Aggregation:
+1.	Category-Wise Sales:
+o	Sum of "Units Sold"
+o	Average "Price"
+2.	General computations:
+o	Total car sales
+o	Maximum car price.
+Code:
 
-Q.3) Consider a sample containing 51,49, 34, 21, 18, 10, 8, 6, 5, 2, 1. Draw 100 bootstrap samples. Hence find Median of each sample and standard error of the median obtained in bootstrap sampling.Hence find confidence interval.
-INPUT:
-z=c(51,49, 34, 21, 18, 10, 8, 6, 5, 2, 1)
-mean3=mean(z)
-s_d3=sd(z)
-set.seed(100)
-d=replicate(100,median(sample(z,11,replace = T)))
-m3=mean(d);m3
-sd3=sd(d);sd3
-lcl3=m3-1.96*sd3
-ucl3=m3+1.96*sd3
-lcl3
-ucl3
+import pandas as pd
+# Create dataset
+data = {
+    'Car': ['Honda', 'Honda', 'Toyota', 'Toyota', 'Ford', 'Ford'],
+    'Category': ['Sedan', 'SUV', 'Sedan', 'SUV', 'Sedan', 'Pickup'],
+    'Price': [25000, 30000, 23000, 28000, 24000, 35000],
+    'Units Sold': [120, 100, 150, 90, 110, 80]
+}
+df = pd.DataFrame(data)
+print(df)
 
-4.Assume that height of a person follows Normal distribution with mean µ and standard deviation 10 cm. The heights of the 4 people are as follows: 168,169,173,174. Generate 1000 parametric bootstrap samples of size 4 each.
-INPUT:
-set.seed(100)
-mu=mean(c(168,169,173,174))
-sigma=10
-e=replicate(1000,mean(rnorm(4,mu,sigma)))
-mean(e)
-hist(e,main="Parametric bootstrap for heights")
-
-5) According to the U.S. National Transportation Safety Board, the number of airline accidents by year from 1983 to 2006 were 23, 16, 21, 24, 34, 30, 28, 24, 26, 18, 23, 23, 36, 37, 49, 50, 51, 56, 46, 41, 54, 30, 40, and 31. (a) For the sample data, compute the mean and its standard error and the median. (b) Using R, compute bootstrap estimates of the mean and median with estimates of their standard errors, using B = 1000 resamples.
-INPUT:
-a=c(23, 16, 21, 24, 34, 30, 28, 24, 26, 18, 23, 23, 36, 37, 49, 50, 51,
-    56, 46, 41, 54, 30, 40, 31)
-set.seed(100)
-#(a) For the sample data, compute the mean and its standard error and the median.
-mean5=mean(a);mean5
-sd=sd(a)
-stand_error=sd/sqrt(length(a));stand_error
-#(b)
-f=replicate(1000,mean(sample(a,24,replace = T)))
-mean(f)
-sd(f)
-g=replicate(1000,median(sample(a,24,replace = T)))
-mean(g)
-
-
-Q6) .“Surimi” is purified fish protein used as a material to make imitation crab and shrimp food products. The strength of surimi gels is a critical factor in production. Each incoming lot of surimi raw material is sampled and a cooked gel is prepared. From these gels, test portions are selected and tested for strength. Our sample data are the measured ultimate stresses to penetrate the test portions for 40 incoming lots of surimi. The data is as follows: 41.28, 45.16, 34.75, 40.76, 43.61, 39.05, 41.20, 41.02, 41.33, 40.61, 40.49, 41.77, 42.07, 44.83, 29.12, 45.59, 41.95, 45.78, 42.89, 40.42, 49.31, 44.01, 34.87, 38.60, 39.63, 38.52,38.52, 43.95, 49.08, 50.52, 43.85, 40.64, 45.86, 41.25, 50.35, 45.18, 39.67, 43.89, 43.89, 42.16 a. Compute bootstrap estimate of mean. Use B = 1000 resamples. b. compute the 95% CI for mean.
-INPUT:
-dat=c( 41.28, 45.16, 34.75, 40.76, 43.61, 39.05,
-       41.20, 41.02, 41.33, 40.61, 40.49, 41.77
-       , 42.07, 44.83, 29.12, 45.59, 41.95, 
-       45.78, 42.89, 40.42, 49.31, 44.01, 
-       34.87, 38.60, 39.63, 38.52,38.52, 43.95
-       , 49.08, 50.52, 43.85, 40.64, 45.86,41.25, 
-       50.35, 45.18, 39.67, 43.89, 43.89, 42.16)
-set.seed(100)
-h=replicate(1000,mean(sample(dat,40,replace = T)))
-m6=mean(h)
-sd6=sd(h)
-lcl6=m6-1.96*sd6
-ucl6=m6+1.96*sd6
-
-##Branching Process
-
-
-Q.1.A branching process has offspring distribution a = (1/4, 1/4, 1/2) where a discrete r.v. X takes values {0,1,2}. Find the following :
-i.          Mean of offspring distribution.
-ii.        P(s), probability generating function of offspring distribution
-iii. 	The probability of ultimate extinction. Verify graphically.
-
- #i)
-p0=1/4
-p1=1/4
-p2=1/2
-mu=p0*0+p1*1+p2*2
-mu
+import numpy as np
+#i)
+# Ensure df is defined, assuming it's the DataFrame from the first cell
+# If df is not defined, you would need to run the cell where it's created.
+unique_categories = df['Category'].unique()
+print("Category-wise Sales:")
+for cat in unique_categories:
+mask = df['Category'] == cat
+total_units = df.loc[mask, 'Units Sold'].sum()
+avg_price = df.loc[mask, 'Price'].mean()
+print(f"{cat}: Units Sold = {total_units}, Avg Price = {avg_price}")
 
 #ii)
-pgf=function(s){
-  (1/4)+(1/4)*s+(1/2)*s^2
-}
-pgf(0)
-pgf(1)
-
-#iii)
-roots=polyroot(c(p0,p1-1,p2))
-roots
-Re(roots[1])
-s1=c()
-p_s=c()
-for (s in seq(0,1,0.1)) {
-  p=pgf(s)
-  s= s
-  s1=rbind(s1,s)
-  p_s=rbind(p_s,p)
-}
-s1
-p_s
-df=cbind(s1,p_s)
-df
-plot(s1,p_s,type = 'l',ylim = c(0,1))
-lines(s1,s1,col="red")
-
-
-Q.2. A branching process has offspring distribution a = (1/6, 1/2, 1/3) where a discrete r.v. X takes values {0,1,2}. Find the following –
-i.          Mean of offspring distribution.
-ii.        P(s), probability generating function of offspring distribution.
-iii. 	The probability of ultimate extinction. Verify graphically.
-
-Code: p0=1/6
-p1=1/2
-p2=1/3
-mu=p0*0+p1*1+p2*2
-mu
-
-#ii)
-pgf=function(s){
-  (1/6)+(1/2)*s+(1/3)*s^2
-}
-pgf(0)
-pgf(1)
-pgf(2)
-
-#iii)
-roots=polyroot(c(p0,p1-1,p2)) #s=po+p1s+p2s^2 == p0+(p1-1)s+p2s^2
-roots
-Re(roots[1])
-
-
-s1=c()
-p_s=c()
-for (s in seq(0,1,0.1)) {
-  p=pgf(s)
-  s= s
-  s1=rbind(s1,s)
-  p_s=rbind(p_s,p)
-}
-s1
-p_s
-df=cbind(s1,p_s)
-df
-plot(s1,p_s,type = 'l',ylim = c(0,1))
-lines(s1,s1,col="red")
-abline(v=0.5)
-
-Q.3  Assume the offspring distribution is uniform on {0,1,2,3,4}. Find the probability of ultimate extinction.
-Code: 
-p0=1/5
-p1=1/5
-p2=1/5
-p3=1/5
-p4=1/5
-m3=p0*0+p1*1+p2*2+p3*3+p4*4
-m3
-
-roots=polyroot(c(p0,p1-1,p2,p3,p4))
-roots
-Re(roots[1])
-
-
-
-## Cluster Analysis Practical
-
-Q1
-A=matrix(c(0,0.76,2.97,4.88,3.86,
-           0.76,0,0.8,4.17,1.92,
-           2.97,0.8,0,0.21,1.51,
-           4.88,4.17,0.21,0,0.51,
-           3.86,1.92,1.51,0.51,0),nrow=5,ncol=5,byrow=TRUE)
-A
-dist=as.dist(A)
-dist
-single_link=hclust(dist,method="single")
-single_link
-single_link$height
-plot(single_link)
-com_link=hclust(dist,method="complete")
-plot(com_link)
-average_link=hclust(dist,method="average")
-plot(average_link)
-
-
-Q2:Input
-data<-corrmat_2
-as.matrix(data)
-dist=as.dist(data)
-dist
-single_link=hclust(dist,method="single")
-single_link
-single_link$height
-plot(single_link)
-com_link=hclust(dist,method="complete")
-plot(com_link)
-
-
-Q3 Input:
-data<-data.frame(item=c("A","B","C","D"),x1=c(5,1,-1,3),x2=c(4,-2,1,1))
-data
-a=data[,2:3]
-a
-dist=dist(a)
-clust_2<-kmeans(dist,centers =2)
-clust_2$cluster
-clust_2$centers
-data$cluster_id<-factor(clust_2$cluster)
-ggplot(data,aes(x1,x2,colour = cluster_id))+
-  geom_point(alpha=0.25)
-
-
-Q4:Input
-data4<-Cluster4
-data4<-data4[,2:9]
-data4
-dist_matrix <- dist(data4, method = "euclidean")
-distance_table <- as.matrix(dist_matrix)
-distance_table
-single_linkage<-hclust(dist_matrix,method = "single")
-single_linkage
-single_linkage$height
-plot(single_linkage,hang=1)
-com_linkage<-hclust(dist_matrix,method = "complete")
-com_linkage
-com_linkage$height
-plot(com_linkage,hang=1)
-
-
-Q5.Input:
-cluster2<-kmeans(dist_matrix,centers = 2)
-cluster3<-kmeans(dist_matrix,centers = 3)
-cluster4<-kmeans(dist_matrix,centers = 4)
-
-
-
-### Design of Experiments
-
-Question1
-#Q1 CRD
-w=c(24,18,18,29,22,17,15,46,39,37,50,44,45,30,32,30,26,41,36,28,27);length(w)
-t=c(rep("A",7),rep("B",7),rep("c",7))
-data_1=data.frame(w,t)
-result = aov(w~t,data = data_1)
-result
-model = lm(w~t,data = data_1)
-summary(model)
-#p-value is less than 0.01 then we reject null hypothesis and proceed to pair wise testing 
-TukeyHSD(result)
-""" pairwise b-a and c-a shows significance diff and b-c is not significantly diff therefore
-the diff dur to treatment A """
-plot(model)
-#normally dist by Q-Q plot
-shapiro.test(model$residuals)  #to check normality
-install.packages("lmtest")
-library(lmtest)
-bptest(model) # homoscedasticity
-#levin test for homoscedasticity
-install.packages("car")
-library(car)
-leveneTest(model)
-
-
-Question2
-Input code:
-x=c(108.2,112.7,116.8,106.8,117.9,225.2,226.4,135.2,227.5,218.2,229.1,
-    176.5,195.2,188.4,190.3,210.3,195.1,201.3,183.6,197.5,186.1,188.6,210.4,
-    214.3,226.2,215.0,230.6,212.6,260.4,227.6,228.3);length(x)
-y <- c(rep("tr1", 5), rep("tr2", 6), rep("tr3", 6), rep("tr4", 6), rep("tr5", 8))
-data_2 = data.frame(x,y)
-result_1 = aov(x~y,data = data_2)
-result_1
-model_1 = lm(x~y,data = data_2)
-model_1
-summary(model_1)
-TukeyHSD(result_1)
-par(mfrow=c(2,2))
-plot(model_1)
-shapiro.test(model_1$residuals)  #to check normality
-bptest(model_1)
-leveneTest(model_1)
-
-
-##Q3
-Input:
-q3<-c(22,42,44,52,45,37,52,33,8,47,43,32,16,24,19,18,34,39)
-treatment<-c(rep("Item1",6),rep("Item2",6),rep("Item3",6))
-data<-data.frame(q3,treatment)
-res<-aov(q3~treatment,data = data)
-model3<-lm(q3~treatment,data = data)
-summary(model3)
-#Therefore we do  not Ho reject ho , Model is not significant
-
-
-Q4 Input:
-df3<-Book2
-df3
-as.factor(Book2$treatment)
-as.factor(Book2$variety)
-result3<-aov(yield~treatment+variety,data=df3)
-result3
-model3<-lm(yield~treatment+variety,data=df3)
-summary(model3)
-TukeyHSD(result3)
-plot(model3)
-shapiro.test(model3$residuals)
-bptest(model3)
-fit<-lm(yield~treatment+variety,data=df3)
-
-
-Q5>Input
-
-data<-question5
-
-
-str(data)
-
-
-model<-lm(data$obs ~ data$row + data$column + data$teat,data = data)
-summary(model)
-aov(model,data = data)
-summary(aov(model))
-TukeyHSD(aov(model))
-plot(model)
-shapiro.test(model$residuals)
-#diffence is due o 2 & 1
-#residuals ae normally distributed
-library(car)
-library(lmtest)
-bptest(model)
-leveneTest(obs~teat,data=data)
-
-
-Q6.Input
-df1<-q6
-str(df1)
-df1$treat=as.factor(df1$treat)
-model<-lm(df1$obs~df1$row+df1$col+df1$treat)
-summary(model)
-an<-aov(model,data = df1)
-an
-summary(an)
-TukeyHSD(an)
-plot(model)
-shapiro.test(model$residuals)
-bptest(model)
-leveneTest(obs~treat,data=df1)
-library(car)
-
-
-Q7.Input
-install.packages("daewr")
-library(daewr)
-
-df2<-taste
-str(taste)
-model1<-lm(taste$score~taste$panelist+taste$recipe)
-summary(model1)
-an1<-aov(model1)
-summary(an1)
-TukeyHSD(an1)
-shapiro.test(model1$residuals)
-bptest(model1)
-###p-value<0.05
-#heteroskedasticity is present\
-plot(model1)
-leveneTest(score~panelist,data = df2)
-
-
-> library(car)
-> library(daewr)
-> 
-> df2<-taste
-> str(taste)
-> model1<-lm(taste$score~taste$panelist+taste$recipe)
-> summary(model1)
-
-
-Q8.Input)
-df3<-q8
-str(df3)
-model2<-lm(df3$values~df3$tips+df3$coupon)
-
-summary(model2)
-an2<-aov(model2)
-summary(an2)
-TukeyHSD(an2)
-shapiro.test(model2$residuals)
-bptest(model2)
-plot(model2)
-leveneTest(values~coupon,data = q8)
-q8$coupon<-as.factor(q8$coupon)
-
-
- #### Factor Analysis
-
-Q1:Input
-###Q1#####
-R<-matrix(c(1,0.676,0.875,0.676,1,0.699,0.875,0.699,1),
-             nrow = 3,ncol = 3,byrow = TRUE)
-R             
-library(psych)
-library(car)
-pca1=prcomp(R,center = T,scale.  = T)
-pca1
-summary(pca1)
-e=eigen(R)
-e
-princomp(R)$scores
-f1=principal(R,nfactors = 1,rotate = 'none')
-f1$uniquenesses
-f2=principal(R,nfactors = 2,rotate = 'none')
-f2$uniquenesses
-#conclusion 
-##fit of the model is based on off diagonal values 1 
-#if off diagonal values is not equal to 1 then model is good fit
-
-
-#####Q2#######
-r2<-matrix(c(1,0.505,0.569,0.602,0.621,0.603,0.505,1,0.422,0.467,0.482,0.45,
-             0.569,0.422,1,0.926,0.877,0.878,0.602,0.467,0.926,1,0.874,0.894,
-             0.621,0.482,0.877,0.874,1,0.937,0.603,0.45,0.878,0.894,0.937,1),nrow=6,ncol=6,byrow=TRUE)
-r2
-A=principal(r2,nfactors = 2,rotate = 'none')
-A
-pca_load=A$loadings
-
-a=fa(r2,2,fm='ml',rotate='none')
-a
-load_fa<-fa$loadings
-specific_var=diag(r2)-(pca_load)^2
-specific_var
-a$uniquenesses
-A$uniquenesses
-c1=1-A$uniquenesses
-c2=1-a$uniquenesses
-var_expl<-principal(r2,nfactors = 6,rotate = 'none')
-var_expl
-A$residual
-a$residual
-
-
-rotatedml<-fa(r2,2,fm='ml',rotate='varimax')
-rotatedpc<-principal(r2,nfactors = 2,rotate = 'varimax')
-rotatedml
-rotatedpc
-
-Q3 Input
-#######Q3######
-c3<-matrix(c(1,0.63,0.45,0.63,1,0.35,0.45,0.35,1),nrow=3,ncol=3,byrow=TRUE)
-c3
-r3<-cov2cor(c3)
-B=principal(r3,2,'none',residuals=T)
-B
-B$communality
-B$loadings
-#Highest loading correlation coefficient is 87.6% weight
-
-
-Q4 Input:
-#####Q4####
-df<-Factordata
-R4=cor(df)
-R4
-
-pca1=principal(R4,6,rotate = 'none')
-pca1
-mle1=factanal(covmat = R4,factors = 3,rotation = 'none')
-mle1
-scree(df)
-#using FA 1st factor is significant
-#using PCA 1st PC is significant
-factor.scores(df,f=mle1$loadings)
-rotatedpc<-principal(R4,nfactors = 3,rotate = 'varimax')
-Output:
-
-
-
-
-##### Factorial Experiments:
-
-#Q.1
-View(FA_Q1_PC_)
-#without effect
-model1=lm(Observation~A+B+C+A:B+A:C+B:C,data=FA_Q1_PC_);model1
-summary(model1)
-anova(model1)
-# since p values is < 0.05 for A,B,C therefre there is significant difference.
-plot(model1)
-shapiro.test(model1$residuals)
-#pvalue = 0.002049 <0.05 Therefore data is not normal
-library(car)
-#for factor A
-leveneTest(Observation~A,data=FA_Q1_PC_)
-# variance of group A are equal.since pvalue > 0.05
-#for factor B
-leveneTest(Observation~B,data=FA_Q1_PC_)
-# variance of group B are equal.since pvalue > 0.05
-#for factor C
-leveneTest(Observation~C,data=FA_Q1_PC_)
-# variance of group C are equal.since pvalue > 0.05
- 
-#with block effect
-model1_1=lm(Observation~A+B+C+A:B+A:C+B:C+Block,data=FA_Q1_PC_);model1_1
-summary(model1_1)
-anova(model1_1)
-# since p values is < 0.05 for A,B,C therefre there is significant difference.
-plot(model1_1)
-shapiro.test(model1_1$residuals)
-#pvalue = 0.00045 <0.05 Therefore data is not normal
-library(car)
-#for factor A
-leveneTest(Observation~A,data=FA_Q1_PC_)
-# variance of group A are equal.since pvalue > 0.05
-#for factor B
-leveneTest(Observation~B,data=FA_Q1_PC_)
-# variance of group B are equal.since pvalue > 0.05
-#for factor C
-leveneTest(Observation~C,data=FA_Q1_PC_)
-# variance of group C are equal.since pvalue > 0.05
-#for block
-leveneTest(Observation~Block,data=FA_Q1_PC_)
-# variance of group Block are equal.since pvalue > 0.05
-
-
-
-Q.2
-#Q.2
-data <- FA_Q2_PC_
-structure(data)
-# Ensure Variety and Replication are factors
-data$variety <- factor(data$variety)
-data$replication <- factor(data$replication)
-data$rates <- factor(data$rates)
-model2 <- lm(obsevation ~ variety + replication + rates + variety:rates, data = data);model2
-summary(model2)
-anova(model2)
-par(mfrow=c(2,2))
-plot(model2)
-shapiro.test(model2$residuals)
-#pvalue > 0.05 Therefore data is normal
-install.packages("car")
-library(car)
-leveneTest(obsevation ~ variety * rates, data = data)
-
-
-
-Q.3
-#Q.3
-structure(FA_Q3_PC_)
-model3=lm(FA_Q3_PC_$Height~FA_Q3_PC_$Forest/FA_Q3_PC_$Tree);model3
-summary(model3)
-anova(model3)
-# since p values is < 0.05 for A,B,C therefre there is significant difference.
-plot(model3)
-shapiro.test(model3$residuals)
-#pvalue > 0.05 Therefore data is normal
-library(car)
-#for factor forest
-leveneTest(Height~Forest,data=FA_Q3_PC_)
-# variance of group forest are not equal.since pvalue < 0.05
-#for factor tree
-leveneTest(Height~Tree,data=FA_Q3_PC_)
-# variance of group tree are equal.since pvalue > 0.05
-#for factor forest given tree
-leveneTest(Height~Forest/Tree,data=FA_Q3_PC_)
-# variance of group tree are equal.since pvalue > 0.05
-
-
-
-Q.4
-#Q.4
-structure(FA_Q4_PC_)
-model4=lm(FA_Q4_PC_$Observation~FA_Q4_PC_$Machine/FA_Q4_PC_$Operator);model4
-summary(model4)
-anova(model4)
-# since p values is < 0.05 for machine, operator. therefore there is significant difference.
-plot(model4)
-shapiro.test(model4$residuals)
-#pvalue < 0.05 Therefore data is not normal
-library(car)
-#for factor machine
-FA_Q4_PC_$Machine <- factor(FA_Q4_PC_$Machine)
-leveneTest(Observation~Machine,data=FA_Q4_PC_)
-# variance of group machine are  equal.since pvalue > 0.05
-#for factor operator
-FA_Q4_PC_$Operator <- factor(FA_Q4_PC_$Operator)
-leveneTest(Observation~Operator,data=FA_Q4_PC_)
-# variance of group operator are equal.since pvalue > 0.05
-#for factor machine given operator
-leveneTest(Observation~Machine/Operator,data=FA_Q4_PC_)
-# variance of group machine given operator are not equal.since pvalue< 0.05
-
-
-
-#### Markov chains 2#####
-
-Q.1 Input:
-a = matrix(c(0,1,0,1),2,2,byrow = TRUE)
-a
-rowSums(a)
-b = matrix(c(0.3,0.2,0.5,0.2,0.3,0.5,0.5,0.5,0),3,3,T)
-b
-rowSums(b)
-c=matrix(c(0.5,0.1,0.5,0.6,0.5,0.1,0,1,1),3,3,T)
-c
-rowSums(c)
-
-
-Q.2 (i) Is chain reducible? (ii) find transient and recurrent
-states.
+# Total car sales
+total_sales = np.sum(df['Units Sold'])
+# Maximum price
+max_price = np.max(df['Price'])
+print("\nTotal Car Sales:", total_sales)
+print("Maximum Car Price:", max_price)
+
+Q2. Write a NumPy program to test whether each element of a 1-D array is also present in a second array.
 Code:
-a = matrix(c(0.5,0,0.5,0,1,0,0.5,0,0.5),3,3,T)
-a
-install.packages("markovchain")
-library(markovchain)
-tpm1=new("markovchain",transitionMatrix=a,states=c("0","1","2"),name="DTMC")
-tpm1
-install.packages("diagram")
-library(diagram)
-plotmat(a,relsize = 0.6)
-summary(tpm1)
-transientStates(tpm1)
+import numpy as np
+# Given arrays
+array1 = np.array([0, 10, 20, 40, 60])
+array2 = np.array([0, 40])
+# Check if elements of array1 are present in array2
+result = np.isin(array1, array2)
+# Output
+print("Array1:", array1)
+print("Array2:", array2)
+print("Compare each element of array1 and array2")
+print("Output:", result)
 
-
-Q.3 (i) Is the chain irreducible? (ii) Are all states transient ? (iii) are all states recurrent?
+Q3. Write a NumPy program to get the unique elements of an array
 Code:
-b=matrix(c(0.5,0.5,0,0,0.5,0.5,0,0,0,0,0,1,0,0,1,0),4,4,T)
-b
-tpm2 = new("markovchain",transitionMatrix = b, states = c("0","1","2","3"),name = "DTMC")
-tpm2
-summary(tpm2)
-transientStates(tpm2)
+import numpy as np
+# 1D array
+array_1 = np.array([10, 10, 20, 20, 30, 30])
+# Get unique elements
+unique_1 = np.unique(array1)
+print("Original array:")
+print(array_1)
+print("Unique elements of the above array:")
+print(unique_1)
+# 2D array
+array_2 = np.array([[1, 1],
+                   [2, 3]])
+# Get unique elements
+unique_2 = np.unique(array_2)
+print("\nOriginal array:")
+print(array_2)
+print("Unique elements of the above array:")
+print(unique_2)
 
-
-Q.4 Classify all the states as recurrent or transient. Is this M.C. irreducible?
+Q4. Write a NumPy program to sort an along the first, last axis of an array.
 Code:
-c=matrix(c(1,0,0,0,0,0.25,0.75,0,0,0,0,0.5,0.5,0,0,0.25,0.25,0,0.25,0.25,0,0,0,0.5,0.5),5,5,T)
-c
-tpm3 = new("markovchain",transitionMatrix = c, states = c("0","1","2","3","4"),name = "DTMC")
-tpm3
-summary(tpm3)
+import numpy as np
+# Given array
+arr1 = np.array([[4, 6],
+                [2, 1]])
+print("Original array:")
+print(arr1)
+# Sort along first axis (column-wise)
+sorted_first_axis = np.sort(arr1, axis=0)
+print("\nSort along the first axis:")
+print(sorted_first_axis)
+# Sort along last axis (row-wise)
+sorted_last_axis = np.sort(arr1, axis=1)
+print("\nSort along the last axis:")
+print(sorted_last_axis)
 
-
-
-Q.5 Classify all the states. Is this M.C reducible?
-Code: d = matrix(c(0.5,0.5,0,0,0,0,0.5,0.5,0,0,0.5,0,0.5,0,0,0,0,0,1,0,0.2,0.2,0.2,0.2,0.2),5,5,T)
-d
-tpm4 = new("markovchain",transitionMatrix = d, states = c("0","1","2","3","4"),name = "DTMC")
-summary(tpm4)
-
-
-Q.6 
+Q5. Write a NumPy program to count the occurrence of a specified item in a given NumPy array.
 Code:
- e= matrix(c(0.5,0.5,0.25,0.75),2,2,T)
-e
-install.packages("matrixcalc")
-library(matrixcalc)
-matrix.power(e,3)
-matrix.power(e,4)
+import numpy as np
+# Given array
+arr = np.array([10, 20, 20, 20, 20, 0, 20, 30, 30, 30, 0, 0, 20, 20, 0])
+print("Original array:")
+print(arr)
+# Elements to count
+elements = [0, 10, 20, 30]
+# Count occurrences
+counts = [np.count_nonzero(arr == x) for x in elements]
+print("Occurrences:", counts)
 
-
-Q.7 Show the state transition diagram for above Markov Chain and Classify the states into
-(i) Communicating Classes
-(ii) Reducible or irreducible states
-(iii) absorbing state and closed states
-Also find the mean recurrent time for recurrent states
-Code: 
-e = matrix(c(0,1/2,1/2,0,1/3,0,0,2/3,1,0,0,0,0,0,0,1),4,4,T)
-e
-tpm5 = new("markovchain",transitionMatrix = e, states = c("1","2","3","4"),name = "DTMC")
-tpm5
-summary(tpm5)
-plotmat(e,relsize = 0.6)
-absorbingStates(tpm5)
-communicatingClasses(tpm5)
-meanRecurrenceTime(tpm5)
-
-
-Q.8 
+Q6. Write a NumPy program to remove nan values from a given array.
 Code:
-f=matrix(c(1/8,1/4,1/8,1/2,3/4,0,0,1/4,0,3/4,0,1/4,1/8,0,7/8,0),4,4,T)
-f
-tpm6 = new("markovchain",transitionMatrix = f, states = c("1","2","3","4"),name = "DTMC")
-steadyStates(tpm6)
+import numpy as np
+# Given array
+arr = np.array([200., 300., np.nan, np.nan, np.nan, 700.])
+print("Original array:")
+print(arr)
+# Remove NaN values
+clean_arr = arr[~np.isnan(arr)]
+print("After removing nan values:")
+print(clean_arr)
 
-
-Q.9
+Q7. Write a NumPy program to calculate percentiles for a sequence or single-dimensional NumPy array.
 Code:
-g=matrix(c(0.5,0,0.5,0,1,0,0.5,0,0.5),3,3,T)
-g
-tpm7 = new("markovchain",transitionMatrix = g, states = c("1","2","3"),name = "DTMC")
-steadyStates(tpm7)
-period(tpm7)
-
-
-#### Maximum Likelihood Estimate  ###
-
-Q1 Input:
-library(MASS)
-set.seed(100)
-N<-20
-n<-10
-p<-0.5
-x<-rbinom(N,n,p)
-x
-nll.binom<- function(size,prob)
-{
-  -sum(dbinom(x,size=10,prob=prob,log=TRUE))
-}
-
-optim(fn=nll.binom,size=10,par=0.1,method='BFGS')
-#b
-N<-500
-n<-10
-p<-0.5
-y<-rbinom(N,n,p)
-nl.binom<-function(size,prob)
-
-{
-  -sum(dbinom(y,size=10,prob=prob,log=TRUE))
-}
-
-optim(fn=nl.binom,par =0.1,size=10,method = 'BFGS')
-
-
-
-Q2:Input:
-set.seed(100)
-lambda<-1.5
-size=10
-X<-rpois(10,lambda = lambda)
-nl.pois<-function(l)
-{
-  -sum(dpois(X,l,log=TRUE))
-}
-optim(fn=nl.pois,par=0.1,method = 'BFGS')
-
-set.seed(100)
-lambda<-1.5
-size=50
-X<-rpois(size,lambda = lambda)
-nl.pois<-function(l)
-{
-  -sum(dpois(X,l,log=TRUE))
-}
-optim(fn=nl.pois,par=0.1,method = 'BFGS')
-
-set.seed(100)
-lambda<-1.5
-size=100
-X<-rpois(size,lambda = lambda)
-nl.pois<-function(l)
-{
-  -sum(dpois(X,l,log=TRUE))
-}
-optim(fn=nl.pois,par=0.1,method = 'BFGS')
-
-
-Q3:Input
-set.seed(100)
-x3<-rnorm(20,5,sqrt(2))
-n1.norm<-function(size=20,mean=5,sd=sqrt(2))
-{
-  -sum(dnorm(x3,mean=mean,sd=sd,log=TRUE))
-}
-optim(fn=n1.norm,par=5,method = 'BFGS')
-
-
-Q4
-Input:
-particles<- c(11, 11, 11, 10, 8, 11, 9, 10, 5, 11, 13, 16, 10, 9, 12, 12, 8, 9, 10, 14,
-               10, 7, 2, 11, 13, 16, 10, 11, 10, 3, 5, 11, 5, 12, 7)
- 
-lambda_estimate <- mean(particles)
-lambda_estimate
-set.seed(123)
-sample_100 <- rpois(100, lambda = lambda_estimate)
-sample_150 <- rpois(150, lambda = lambda_estimate)
-lambda_estimate_100 <- mean(sample_100)
-lambda_estimate_150 <- mean(sample_150)
-lambda_estimate_100
-lambda_estimate_150
-
-
-
-Input:
-set.seed(100)
-
-estimate_exponential <- function(sample) {
-  rate_estimate <- 1 / mean(sample)  # MLE for Exponential distribution
-  return(rate_estimate)
-}
-
-estimate_gamma <- function(sample) {
-  sample_mean <- mean(sample)
-  sample_variance <- var(sample)
-  
-shape_estimate <- sample_mean^2 / sample_variance
-scale_estimate <- sample_variance / sample_mean
-  
-  return(c(shape_estimate, scale_estimate))
-}
-
-
-sample_sizes <- c(50, 100, 120)
-
-for (size in sample_sizes) {
-  exp_sample <- rexp(size, rate = 2)
-  rate_estimate <- estimate_exponential(exp_sample)
-  cat("Sample Size:", size, "Estimated Rate:", rate_estimate, "\n")
-}
-
-for (size in sample_sizes) {
-  gamma_sample <- rgamma(size, shape = 2, scale = 1)
-  gamma_estimates <- estimate_gamma(gamma_sample)
-  cat("Sample Size:", size, "Estimated Shape:", gamma_estimates[1], "Estimated Scale:", gamma_estimates[2], "\n")
-}
-
-
-
-
-#####    Method of Moments   ####
-
-#1  
-x=c(1.3,0.6,1.7,2.2,0.3,1.1,2.1,1.8,0.7)
-2*mean(x)
-
-
-> x=c(1.3,0.6,1.7,2.2,0.3,1.1,2.1,1.8,0.7)
-> 2*mean(x)
-[1] 2.622222
-
-
-#2
-x=c(1.3,0.7,3.6,5.4,7.4,2.5,3.2,4.1,2.5,2.6)
-mean(x)-1
-Output:
-
-
-> x=c(1.3,0.7,3.6,5.4,7.4,2.5,3.2,4.1,2.5,2.6)
-> mean(x)-1
-[1] 2.33
-
-
-#3
-set.seed(123)
-d=rexp(100,1/2)
-w=1/mean(d)
-w #run  all the codes together
-set.seed(123)
-> d=rexp(100,1/2)
-> w=1/mean(d)
-> w #run  all the codes together
-[1] 0.4781401
-
-
-#4
-set.seed(0)
-d1=rgamma(1000,5,scale = 7)
-m1=mean(d1);m2=mean(d1^2)
-be=m1/(m2-m1^2);be
-al=m1*be;al
-set.seed(0)
-> d1=rgamma(1000,5,scale = 7)
-> m1=mean(d1);m2=mean(d1^2)
-> be=m1/(m2-m1^2);be
-[1] 0.1432545
-> al=m1*be;al
-[1] 4.885506
-
-
-#5
-set.seed(456)
-d2=runif(150,2,8)
-m1=mean(d2)
-v=var(d2)
-
-
-v=var(d2)
-a=m1-sqrt(3*v);a
-b=m1+sqrt(3*v);b
-set.seed(456)
-> d2=runif(150,2,8)
-> m1=mean(d2);m2=mean(d2^2)
-> a=m1-sqrt(3*(m2-m1^2));a
-[1] 2.284149
-> b=m1+sqrt(3*(m2-m1^2));b
-[1] 8.241215
-> v=var(d2)
-> a=m1-sqrt(3*v);a
-[1] 2.274171
-> b=m1+sqrt(3*v);b
-[1] 8.251193
-
-#6
-x6 = c(0,1,2,3,4,5)
-f6 = c(214,123,45,13,4,1)
-mu6 = sum(x6*f6)/400 ; mu6
-var6 = mean(sum(x6^2 * f6)/400) - mu6^2 ; var6
-p6 = mu6/var6 ; p6
-k6 = p6*mu6/(1-p6) ; k6
-x6 = c(0,1,2,3,4,5)
-> f6 = c(214,123,45,13,4,1)
-> mu6 = sum(x6*f6)/400 ; mu6
-[1] 0.6825
-> var6 = mean(sum(x6^2 * f6)/400) - mu6^2 ; var6
-[1] 0.8066937
-> p6 = mu6/var6 ; p6
-[1] 0.846046
-> k6 = p6*mu6/(1-p6) ; k6
-[1] 3.750642
-
-#7
-data7 = c(0.85,0.76,0.82,0.78,0.9,0.9,0.98,.78)
-mu7 = mean(data7) ; mu7
-teta7 = mu7/(1-mu7) ; teta7
-data7 = c(0.85,0.76,0.82,0.78,0.9,0.9,0.98,.78)
-> mu7 = mean(data7) ; mu7
-[1] 0.84625
-> teta7 = mu7/(1-mu7) ; teta7
-[1] 5.504065
-
-
-#8
-data8 = c(2, 9 ,7, 7 ,8, 4, 3, 3, 6, 6)
-mu8 = mean(data8) ; mu8
-var8 = mean(data8^2) - mu8^2 ; var8
-data8 = c(2, 9 ,7, 7 ,8, 4, 3, 3, 6, 6)
-> mu8 = mean(data8) ; mu8
-[1] 5.5
-> var8 = mean(data8^2) - mu8^2 ; var8
-[1] 5.05
-
-
-
-##########  Multivariate Analysis ######
-
-Q1
-Input code
-#i P(y>75)
-mewx=70
-mewy=60
-sigmax=10
-sigmay=15
-p1<-pnorm(75,mewy,sigmay,lower=F)
-p1
-##ii p(y>75/x=80)
-x=80
-rho=0.6
-mewyx=mewy+(rho*(sigmay/sigmax)*(x-mewx))
-mewyx
-sigmayx<-sigmay*sqrt(1-rho^2)
-sigmayx
-p2<-pnorm(75,mewyx,sigmayx,lower=F)
-p2
-##iii
-mew1=mewx+mewy
-sigma1<-sqrt(sigmax^2+sigmay^2+2*rho*sigmax*sigmay)
-sigma1
-p3<-pnorm(150,mew1,sigma1,lower=F)
-p3
-##iv p(x>y)==p(x-y>0)
-mew2<-mewx-mewy
-mew2
-sigma2<-sqrt(sigmax^2+sigmay^2-2*rho*sigmax*sigmay)
-sigma2
-p4<-pnorm(0,mew2,sigma2,lower=F)
-p4
-##v
-mew3<-5*mewx-4*mewy
-mew3
-sigma3<-sqrt(25*sigmax^2+16*sigmay^2-40*rho*sigmax*sigmay)
-sigma3
-p5<-pnorm(150,mew3,sigma3,lower=F)
-p5
-
-
-Question2
-#Input Code
-install.packages("MASS")
-library(MASS)
-set.seed(123)
-mean_vec<-c(mewx,mewy)
-cov_mat<-matrix(c(sigmax^2,rho*sigmax*sigmay,rho*sigmax*sigmay,sigmay^2),nrow = 2,byrow = TRUE)
-random_500<-mvrnorm(n = 500, mean_vec, cov_mat)
-head(random_500)
-
-
-Question3
-#Input Code
-mew1<-1
-mew2<-2
-sigma1<-2
-sigma2<-8
-roh<-0.6
-mean_vec<-c(mew1,mew2)
-mean_vec
-cov_mat<-matrix(c(sigma1^2,roh*sigma1*sigma2,roh*sigma1*sigma2,sigma2^2),nrow = 2,byrow = TRUE)
-cov_mat
-set.seed(123)
-random_200<-mvrnorm(n = 200, mean_vec, cov_mat)
-head(random_200)
-##ii
-install.packages("mvtnorm")
-library(mvtnorm)
-#Singular value Decomposition
-bvn2<-mvtnorm::rmvnorm(200,mean_vec,cov_mat,method = "svd")
-head(bvn2)
-##iii
-gibbs<-function(n,mew1,sigma1,mew2,sigma2,rog){
-  mat=matrix(ncol = 2,nrow = 200)
-  x=0
-  y=0
-  mat[1,]=c(x,y)
-  for (i in 2:n) {
-    x<-rnorm(1,1+0.6*(2/8)*(y-1),2*sqrt(1-0.6^2))
-    y<-rnorm(1,1+0.6*(8/2)*(x-1),2*sqrt(1-0.6^2))
-    mat[i,]=c(x,y)
-  }
-  mat
-}
-bvn<-gibbs(200,1,2,1,8,0.6)
-head(bvn) 
-##iv
-rbnv<-function(n,mew1,sigma1,mew2,sigma2,rog){
-  x=rnorm(n,mew1,sigma1)
-  y=rnorm(n,mew2+roh*(sigma2/sigma1)*(x-1),8*sqrt(1-0.6^2))
-  cbind(x,y)
-}
-bvn4<-rbnv(200,1,2,1,8,0.6)
-head(bvn4)  
-
-
-Question4
-#Input Code
-data("iris")
-
-iris.std<-sweep(iris[,-5],2,apply(iris[,-5],2,sd),"/")
-
-sepal.means<-iris.std[,1:2]
-
-petal.means<-iris.std[,3:4]
-R11<-cor(sepal.means)
-R11
-R22<-cov(petal.means)
-R22
-R12<-c(cor(sepal.means[,1],petal.means[,1]),cor(sepal.means[,1],petal.means[,2]),
-       cor(sepal.means[,2],petal.means[,1]),cor(sepal.means[,2],petal.means[,1]))
-R12
-
-R12<-matrix(R12,ncol=2,byrow=TRUE)
-R12
-R21=t(R12)
-E1<-solve(R11)%*%R12%*%solve(R22)%*%R21
-E2<-solve(R22)%*%R21%*%solve(R11)%*%R12
-E1
-E2
-eigen(E1)
-eigen(E2)
-Cannon.corr<-sqrt(eigen(E1)$values)
-Cannon.corr
-
-
-Question 5
-
-#input code
-library(rattle)
-data("wine")
-data(wine, package = "rattle")
-data=wine
-str(wine)
-
-wine$Type <- as.factor(wine$Type)
-
-set.seed(123)  
-library(caret)  
-library(recipes)
-
-# Perform Linear Discriminant Analysis (LDA)
-lda_model <- lda(Type ~ ., data = data)
-
-# Print LDA model summary
-print(lda_model)
-
-plot(lda_model)
-test_data<-data[1:5,] #Making test data of 1st 5 rows
-
-lda_predictions <- predict(lda_model, newdata = test_data)
-
-conf_matrix <- confusionMatrix(lda_predictions$class, test_data$Type)
-print(conf_matrix)
-
-
-##### Poisson Process ###
-
-Q1 
-Input Code:
- lambda=3
-ans1=dpois(4,3*2)
-Output:
-lambda=3
-> ans1=dpois(4,3*2)
-ans1
-[1] 0.1338526
-Q2
-Input:
-lambda2=10/60
-t=5
-s=2
-prob=s/t
-dbinom(2,2,0.4)
-#ii
-ans2=1-dbinom(0,2,0.4)
-ans2
-Output:
-lambda2=10/60
-> t=5
-> s=2
-> prob=s/t
-> dbinom(2,2,0.4)
-[1] 0.16
-> #ii
-> ans2=1-dbinom(0,2,0.4)
-> ans2
-[1] 0.64
-Q3
-Input:
-lambda3=5
-p=0.6
-dpois(10,lambda3*p*4)
-
-Output:
-lambda3=5
-> p=0.6
-> dpois(10,lambda3*p*4)
-[1] 0.1048373
-
-Q4
-Input:
-#######Q4######
-> d=1-pexp(2)
-> d
-[1] 0.1353353
-
-Q5
-Input:
-l5=1/12
-avg=5*24*365
-avg
-dpois(0,l5*60*24)
-a=1-pexp(8,l5)
- a
-Input:
-l5=1/12
-> avg=5*24*365
-> avg
-[1] 43800
-> 
-> dpois(0,l5*60*24)
-[1] 7.667648e-53
-> 
-> a=1-pexp(8,l5)
-> a
-[1] 0.5134171
-Q6:Input:
-lambda11=0.5
-dpois(0,l1*2)
-dpois(1,0.5)^4
-Output:
-lambda11=0.5
-> dpois(0,l1*2)
-[1] 0.1353353
-> dpois(1,0.5)^4
-[1] 0.008458455
-Q7:Input
-#####Q7##########
-l1=1
-l2=2
-a1=dpois(2,3)
-a2=dpois(5,6)
-a1*a2
-
-a3=dpois(1,l1)*dpois(1,l2)/dpois(2,l1+l2)
-a3
-Output:
-#####Q7##########
-> l1=1
-> l2=2
-> a1=dpois(2,3)
-> a2=dpois(5,6)
-> a1*a2
-[1] 0.0359863
-> 
-> a3=dpois(1,l1)*dpois(1,l2)/dpois(2,l1+l2)
-> a3
-[1] 0.4444444
-
-
-
-
-
-##### Principal_component_analysis###
-
-Q1:Input
-#Q.1
-data=matrix(c(1,0.676,0.875,0.676,1,0.699,0.875,0.699,1),byrow = T,nrow = 3)
-data
-eigen_value=eigen(data);eigen_value
-#Y1=0.59115188*x1+0.5429954*x2+0.5964021*x3
-#Y2=0.4225138*x1-0.8383426*x2+0.3444762*x3
-#Y3=0.68703829*x1+0.04835036*x2-0.72501078*x3
-v1=eigen_value$values[1]/(eigen_value$values[1]+eigen_value$values[2]+eigen_value$values[3])
-v1
-v2=eigen_value$values[2]/(eigen_value$values[1]+eigen_value$values[2]+eigen_value$values[3])
-v2
-v3=eigen_value$values[3]/(eigen_value$values[1]+eigen_value$values[2]+eigen_value$values[3])
-v3
-#the maximum variance is explained by Y1
-#obtain correlation coefficient
-corr11=eigen_value$vectors[1,1]*sqrt(eigen_value$values[1])/1;corr11
-corr12=eigen_value$vectors[1,2]*sqrt(eigen_value$values[1])/1;corr12
-corr13=eigen_value$vectors[1,3]*sqrt(eigen_value$values[1])/1;corr13
-corr21=eigen_value$vectors[2,1]*sqrt(eigen_value$values[2])/1;corr21
-corr22=eigen_value$vectors[2,2]*sqrt(eigen_value$values[2])/1;corr22
-corr23=eigen_value$vectors[2,3]*sqrt(eigen_value$values[2])/1;corr23
-corr31=eigen_value$vectors[3,1]*sqrt(eigen_value$values[3])/1;corr31
-corr32=eigen_value$vectors[3,2]*sqrt(eigen_value$values[3])/1;corr32
-corr33=eigen_value$vectors[3,3]*sqrt(eigen_value$values[3])/1;corr33
-corr_matrix=eigen_value$vectors*sqrt(eigen_value$values);corr_matrix
-#obtain principal components
-prcomp(data)
-
-
-
-Q.(EXTRA)
-#Q. EXTRA
-sigma=matrix(c(11,-12,6,-12,15,4,6,4,12),nrow = 3,byrow = T);sigma
-a=eigen(sigma);a
-P_C=prcomp(sigma);P_C
-cor(sigma)
-eigen(cor(sigma)) # here last eigen value is negative
-install.packages("factoextra")
-library(factoextra)
-fviz_eig(P_C)
-fviz_pca_biplot(P_C)
-#obtain correlation coefficient
-corr11=a$vectors[1,1]*sqrt(a$values[1])/1;corr11
-corr12=a$vectors[1,2]*sqrt(a$values[1])/1;corr12
-corr13=a$vectors[1,3]*sqrt(a$values[1])/1;corr13
-corr21=a$vectors[2,1]*sqrt(a$values[2])/1;corr21
-corr22=a$vectors[2,2]*sqrt(a$values[2])/1;corr22
-corr23=a$vectors[2,3]*sqrt(a$values[2])/1;corr23
-corr31=a$vectors[3,1]*sqrt(a$values[3])/1;corr31
-corr32=a$vectors[3,2]*sqrt(a$values[3])/1;corr32
-corr33=a$vectors[3,3]*sqrt(a$values[3])/1;corr33
-corr_matrix=a$vectors*sqrt(a$values);corr_matrix
-
-
-
-
-Q.2
-
-sigma=matrix(c(1,0.25,0.25,0.25,1,0.25,0.25,0.25,1),nrow = 3,byrow = T);sigma
-a=eigen(sigma);a
-P_C1=prcomp(sigma);P_C1
-cor(sigma)
-eigen(cor(sigma))
-install.packages("factoextra")
-library(factoextra)
-fviz_eig(P_C1)
-fviz_pca_biplot(P_C1)
-#obtain correlation coefficient
-corr11=a$vectors[1,1]*sqrt(a$values[1])/1;corr11
-corr12=a$vectors[1,2]*sqrt(a$values[1])/1;corr12
-corr13=a$vectors[1,3]*sqrt(a$values[1])/1;corr13
-corr21=a$vectors[2,1]*sqrt(a$values[2])/1;corr21
-corr22=a$vectors[2,2]*sqrt(a$values[2])/1;corr22
-corr23=a$vectors[2,3]*sqrt(a$values[2])/1;corr23
-corr31=a$vectors[3,1]*sqrt(a$values[3])/1;corr31
-corr32=a$vectors[3,2]*sqrt(a$values[3])/1;corr32
-corr33=a$vectors[3,3]*sqrt(a$values[3])/1;corr33
-corr_matrix=a$vectors*sqrt(a$values);corr_matrix
-
-
-#####Q3#####
-corr3=matrix(c(1,0.920,0.875,0.625,
-               0.920,1,0.889,0.750,
-               0.875,0.889,1,0.425,
-               0.625,0.750,0.425,1),ncol=4,byrow=T)
-pca3=princomp(corr3)
-pca3$loadings
-summary(pca3)
-
-
-####Q4######
-data4<-pca4[,2:7]
-data4
-corr4<-cor(data4)
-eigen(corr4)
-princomp(data4)$scores
-
-
-
-#####Q5#####
-install.packages("factoextra")
-library(factoextra)
-data=data("mtcars")
-head(mtcars)
-standarise_data=scale(mtcars)
-standarise_data
-pca=princomp(standarise_data);pca
-summary(pca)
-biplot=fviz_pca_biplot(pca)
-biplot
-fviz_eig(pca)
-
-
+import numpy as np
+# Sample array
+arr = np.array([1, 2, 3, 4, 5])
+# Calculate percentiles
+per_50 = np.percentile(arr, 50)
+per_40 = np.percentile(arr, 40)
+per_90 = np.percentile(arr, 90)
+print("50th percentile (median):")
+print(per_50)
+print("40th percentile:")
+print(per_40)
+print("90th percentile:")
+print(per_90)
+
+Q8. Write a NumPy program to find indices of elements equal to zero in a NumPy array.
+import numpy as np
+# Given array
+arr = np.array([1, 0, 2, 0, 3, 0, 4, 5, 6, 7, 8])
+print("Original array:")
+print(arr)
+# Find indices where element is 0
+indices = np.where(arr == 0)[0]
+print("Indices of elements equal to zero of the said array:")
+print(indices)
+
+Q9. Write a NumPy program to round elements of the array to the nearest integer, and then calculate the abslute value element wise.
+Code:
+import numpy as np
+# Given array
+arr = np.array([-0.7, -1.5, -1.7, 0.3, 1.5, 1.8, 2.0])
+print("Original array:")
+print(arr)
+# Round to nearest integer
+rounded = np.round(arr)
+# Take absolute value
+result = np.abs(rounded)
+print("\nRound elements of the array to the nearest integer:")
+print(result)
+
+10. Write a NumPy program to get the indices of the sorted elements of a given array.
+Code:
+#10
+import numpy as np
+# Given array
+arr = np.array([1023, 5202, 6230, 1671, 1682, 5241, 4532])
+print("Original array:")
+print(arr)
+# Get indices of sorted elements
+indices = np.argsort(arr)
+
+print("Indices of the sorted elements of a given array:")
+print(indices)
