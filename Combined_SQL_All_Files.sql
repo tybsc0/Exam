@@ -1,0 +1,543 @@
+-- ============================================================
+-- SOURCE FILE: sql_23_sept.sql
+-- ============================================================
+
+with main_data as(
+SELECT
+	ProductKey,
+	SalesAmount,
+	TRY_CAST(REPLACE(REPLACE(SalesAmount, N'ريال', ''), ',','') AS FLOAT) as Sales
+FROM
+	FactInternetSales
+),
+
+avg_sales as (
+select
+	AVG(sales) as AVG_VAL
+from
+main_data
+),
+
+
+
+with main_data as(
+SELECT 
+	ProductKey,
+    SalesAmount,
+    TRY_CAST(REPLACE(REPLACE(SalesAmount, N'ريال', ''), ',', '') AS FLOAT) as Sales
+FROM 
+    FactInternetSales
+),
+
+avg_sales as (
+select
+	AVG(sales) AS AVG_VAL
+from
+main_data
+),
+
+PRODUCTS AS(
+SELECT
+	DISTINCT ProductKey
+FROM
+main_data
+WHERE Sales > (SELECT AVG_VAL FROM avg_sales)
+)
+
+SELECT
+	EnglishProductName
+FROM
+DimProduct
+WHERE ProductKey IN (SELECT ProductKey FROM PRODUCTS)
+
+
+
+
+
+
+with main_data as(
+SELECT 
+	CustomerKey,
+	SalesAmount,
+    TRY_CAST(REPLACE(REPLACE(SalesAmount, N'ريال', ''), ',', '') AS FLOAT) as Purchase
+FROM 
+    FactInternetSales
+),
+
+avg_purchase as (
+select
+	AVG(purchase) AS AVG_VAL
+from
+main_data
+),
+
+Customer AS(
+SELECT
+	DISTINCT CustomerKey
+FROM
+main_data
+WHERE Purchase > (SELECT AVG_VAL FROM avg_purchase)
+)
+
+SELECT
+	CustomerKey
+FROM
+DimCustomer
+WHERE CustomerKey IN (SELECT CustomerKey FROM Customer)
+
+
+
+
+with main_data as(
+SELECT 
+	CustomerKey,
+	SalesAmount,
+    TRY_CAST(REPLACE(REPLACE(SalesAmount, N'ريال', ''), ',', '') AS FLOAT) as Purchase
+FROM 
+    FactInternetSales
+),
+
+avg_purchase as (
+select
+	AVG(purchase) AS AVG_VAL
+from
+main_data
+),
+
+Customer AS(
+SELECT
+	DISTINCT CustomerKey
+FROM
+main_data
+WHERE Purchase > (SELECT AVG_VAL FROM avg_purchase)
+)
+
+SELECT
+	FirstName
+FROM
+DimCustomer
+WHERE CustomerKey IN (SELECT CustomerKey FROM Customer)
+
+
+
+SELECT
+	*
+from
+FactInternetSales
+
+
+
+with main_data as(
+SELECT 
+	ProductKey,
+    SalesAmount,
+    TRY_CAST(REPLACE(REPLACE(SalesAmount, N'ريال', ''), ',', '') AS FLOAT) as Sales
+FROM 
+    FactInternetSales
+)
+
+SELECT
+	EnglishProductName
+FROM
+DimProduct
+WHERE ProductKey IN (SELECT ProductKey FROM main_data where Sales=0 or sales is null)
+
+
+select
+	*
+from
+FactInternetSales
+(where ProductKey IN 
+(SELECT ProductKey FROM main_data where Sales=0 or Sales is null)
+
+select
+	EnglishProductName
+from
+DimProduct
+where ProductKey in (
+select
+	distinct ProductKey
+from
+FactInternetSales
+where TRY_CAST(REPLACE(REPLACE(SalesAmount, N'ريال', ''), ',', '') AS FLOAT) = 0
+)
+
+
+-- ============================================================
+-- SOURCE FILE: sql_22_sept.sql
+-- ============================================================
+
+create table employee(
+id int,
+name varchar(50),
+salary int,
+dept varchar(50)
+);
+
+
+insert into employee
+values
+(1,'Sachin',500000,'Analytics'),
+(2,'Rahul',200000,'HR'),
+(3,'Manish',150000,'Sales'),
+(4,'Ramesh',180000,'Admin'),
+(5,'Rajesh',300000,'IT'),
+(6,'Krishna',230000,'Management');
+
+select 
+ *
+from
+(select
+     id,name,dept
+from
+employee)as
+Views
+
+create table dept
+(
+ dept_id int,
+ name varchar(50),
+ cnt int
+);
+select 
+ *
+from
+dept;
+insert into dept
+values
+(1,'hr',10),
+(2,'sales',20),
+(3,'analytics',30),
+(4,'it',25),
+(5,'management',15);
+select 
+* 
+from 
+employee
+where dept in(select
+                    distinct name
+				from 
+				dept)
+select
+max(salary)
+from 
+employee
+
+select
+top(1)*
+from employee
+where salary<(select
+max(salary)
+from 
+employee)
+order by salary desc;
+select 
+top(1)* 
+from employee
+where salary<(select
+top(1)salary
+from employee
+where salary<(select
+max(salary)
+from 
+employee)
+order by salary desc)
+order by salary desc;
+
+select 
+min(salary)
+from 
+employee;
+
+select 
+  top(1)*
+from employee
+where salary>(select 
+min(salary)
+from 
+employee)
+order by salary;
+
+
+-- ============================================================
+-- SOURCE FILE: Joints.sql
+-- ============================================================
+
+use Adventureworks;
+
+create table employee(EmpID int,EmpName Varchar(20),DeptID int,ManageID int,salary int);
+
+insert into employee(EmpID,EmpName,DeptID,ManageID,salary) 
+values
+(1,'Rahul',1,Null,50000),
+(2,'Rahul',2,1,20000),
+(3,'Rahul',1,1,60000),
+(4,'Rahul',3,2,40000),
+(5,'Rahul',1,2,50000) ;
+
+
+create table department(ID int,Department varchar(20));
+
+insert into department(ID,Department)
+values
+(1,'IT'),
+(2,'HR'),
+(3,'Finance'),
+(4,'Marketing'),
+(5,'Analytics') ;
+
+select *
+from employee;
+
+select *
+from department;
+
+select 
+	B.Department , sum(A.salary) as Total_salary,
+	AVG(A.salary) as Average_salary,
+	min(A.salary) as mini_salary,
+	count(A.EmpID) as Num_Person
+from employee as A
+join department as B
+on A.DeptID = b.ID
+group by B.Department
+;
+
+select *
+from department as B
+left join 
+employee as A
+on A.DeptID = B.ID;
+
+select *
+from employee as A
+full outer join 
+department as B
+on A.DeptID = B.ID;
+
+select *
+from employee as A
+self join employee as B
+on A.;
+
+---Cross Table
+
+create table groupA
+(
+	Name varchar(20)
+);
+
+create table groupB
+(
+	Name varchar(20)
+	);
+
+insert into groupA
+values
+('India'),
+('South Africa'),
+('England');
+
+insert into groupB
+values
+('USA'),
+('China'),
+('Pakistan');
+
+
+select *
+from groupA as A
+cross join groupB as B
+order by 1;
+
+select *
+from groupA as A
+join groupA as B
+on A.Name < B.Name;
+
+
+-- ============================================================
+-- SOURCE FILE: sql_22aug.sql
+-- ============================================================
+
+select count(*) --606
+from DimProduct;
+ 
+ select *
+from FactInternetSales;
+
+select
+	count(distinct ProductKey)
+from FactInternetSales
+
+
+
+select
+    count(distinct(ProductKey)) --606 primary
+from
+DimProduct;
+
+select *
+from DimCustomer
+
+select
+	count(distinct CustomerKey) --18484 primary key
+from DimCustomer
+
+select *
+from DimDate
+
+select
+	count(distinct DateKey) --3652 primary key
+from DimDate
+
+select *
+from DimEmployee
+
+select
+	count(distinct EmployeeKey) --296 foreign key
+from DimEmployee
+
+select *
+from DimGeography
+
+select
+	count(distinct GeographyKey) --655 foreign key
+from DimGeography
+
+select *
+from DimProductCategory
+
+select
+	count(distinct ProductCategoryKey) --4 foreign key
+from DimProductCategory
+
+select *
+from DimSalesTerritory
+
+select
+	count(distinct SalesTerritoryKey) --11 primary key
+from DimSalesTerritory
+
+
+select
+	ProductKey as Name,SalesTerritoryKey,count(*) as cnt
+from
+FactInternetSales
+group by ProductKey,SalesTerritoryKey
+--having count(*) > 1000
+order by cnt desc
+
+
+-- ============================================================
+-- SOURCE FILE: sql_5sept.sql
+-- ============================================================
+
+select
+	*
+from
+FactInternetSales
+where SalesTerritoryKey in (1,4)
+
+select
+	*
+from
+FactInternetSales
+where SalesTerritoryKey exists true
+
+select
+	*
+from
+FactInternetSales
+where PromotionKey=1 and SalesTerritoryKey=2
+
+select
+	*
+from
+FactInternetSales
+where SalesTerritoryKey in (1,2,3,4) and
+(PromotionKey=1 or PromotionKey=2)
+
+select
+	*
+from
+FactInternetSales
+where SalesTerritoryKey >=1 and SalesTerritoryKey<=4
+and (PromotionKey=1 or PromotionKey=2)
+
+select
+	*
+from
+FactInternetSales
+where SalesTerritoryKey between 1 and 4 and
+(PromotionKey=1 or PromotionKey=2)
+
+select
+	distinct FirstName
+from
+DimEmployee
+where FirstName like 'an%'
+
+select
+	distinct FirstName
+from
+DimEmployee
+where FirstName like '%ra'
+
+select
+	distinct FirstName,LastName
+from
+DimEmployee
+where FirstName like '%sa%' and LastName like '%sa%'
+
+select
+	*
+from
+DimEmployee
+where MiddleName is null
+
+select
+	distinct FirstName
+from
+DimEmployee
+where FirstName like '%_sa_%'
+
+
+-- ============================================================
+-- SOURCE FILE: sql_8aug.sql
+-- ============================================================
+
+CREATE TABLE STUDENT
+(
+	ROLL_NO INT PRIMARY KEY,
+	NAME VARCHAR(10),
+	MARKS INT
+)
+;
+SELECT
+	*
+FROM
+STUDENT
+;
+
+ALTER TABLE STUDENT
+ADD LAST_NAME VARCHAR(10);
+
+INSERT INTO STUDENT
+VALUES
+(2,'A',10,'B'),
+(3,'C',10,'D'),
+(4,'E',25,'F'),
+(5,'G',25,'H')
+;
+
+UPDATE STUDENT
+SET NAME='Z'
+WHERE MARKS=10
+
+DELETE FROM STUDENT
+WHERE MARKS=10
+
+TRUNCATE TABLE STUDENT;
+DROP TABLE STUDENT;
+
